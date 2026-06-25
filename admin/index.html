@@ -1,0 +1,608 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Painel Admin — Rafael Rocha</title>
+  <meta name="robots" content="noindex, nofollow">
+  <script src="https://cdn.tailwindcss.com?plugins=forms"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Hanken+Grotesk:wght@300;400;500;600&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet">
+  <!-- Cloudinary Upload Widget -->
+  <script src="https://upload-widget.cloudinary.com/latest/global/all.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          fontFamily: {
+            serif: ['Playfair Display', 'serif'],
+            sans: ['Hanken Grotesk', 'sans-serif'],
+          },
+          colors: {
+            primary: '#000000',
+            secondary: '#b7102a',
+            'gallery-gray': '#F9F9F9',
+            'border-subtle': '#F0F0F0',
+            'text-muted': '#666666',
+            'on-surface-variant': '#444748',
+          }
+        }
+      }
+    }
+  </script>
+  <style>
+    body { font-family: 'Hanken Grotesk', sans-serif; background-color: #f9f9f9; }
+    .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24; }
+    .artwork-image-preview { width: 80px; height: 80px; object-fit: cover; border-radius: 4px; }
+    .fade-in { animation: fadeIn 0.3s ease-in-out; }
+    @keyframes fadeIn { from { opacity: 0; transform: translateY(8px); } to { opacity: 1; transform: translateY(0); } }
+    .spinner { border: 2px solid #f3f3f3; border-top: 2px solid #000; border-radius: 50%; width: 16px; height: 16px; animation: spin 0.8s linear infinite; display: inline-block; }
+    @keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }
+    #toast { transition: opacity 0.3s ease; }
+  </style>
+</head>
+
+<body class="min-h-screen">
+
+  <!-- ═══════════════════════════════════════════
+       LOGIN SCREEN
+  ═══════════════════════════════════════════ -->
+  <div id="login-screen" class="min-h-screen flex items-center justify-center px-4">
+    <div class="w-full max-w-sm">
+      <div class="text-center mb-10">
+        <h1 class="font-serif text-3xl font-light tracking-widest text-primary mb-1">RAFAEL ROCHA</h1>
+        <p class="text-sm text-text-muted tracking-widest uppercase">Painel Administrativo</p>
+      </div>
+      <form id="login-form" class="space-y-4" onsubmit="handleLogin(event)">
+        <div>
+          <label class="block text-sm font-medium text-primary mb-1.5" for="password-input">Senha</label>
+          <input
+            id="password-input"
+            type="password"
+            placeholder="Digite a senha"
+            autocomplete="current-password"
+            required
+            class="w-full border border-gray-300 rounded px-4 py-3 text-sm focus:outline-none focus:border-primary transition-colors"
+          >
+        </div>
+        <p id="login-error" class="text-sm text-red-600 hidden">Senha incorreta. Tente novamente.</p>
+        <button
+          id="login-btn"
+          type="submit"
+          class="w-full bg-primary text-white py-3 text-sm font-medium tracking-wider uppercase hover:bg-gray-800 transition-colors rounded"
+        >
+          Entrar
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <!-- ═══════════════════════════════════════════
+       ADMIN PANEL (hidden until authenticated)
+  ═══════════════════════════════════════════ -->
+  <div id="admin-panel" class="hidden max-w-3xl mx-auto px-4 py-10 pb-24">
+
+    <!-- Header -->
+    <header class="flex items-center justify-between mb-10 border-b border-border-subtle pb-6">
+      <div>
+        <h1 class="font-serif text-2xl font-light tracking-widest text-primary">RAFAEL ROCHA</h1>
+        <p class="text-xs text-text-muted tracking-widest uppercase mt-0.5">Painel Administrativo</p>
+      </div>
+      <div class="flex items-center gap-4">
+        <a href="/" target="_blank" class="text-xs text-text-muted hover:text-primary transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-base">open_in_new</span>
+          Ver site
+        </a>
+        <button onclick="handleLogout()" class="text-xs text-text-muted hover:text-primary transition-colors flex items-center gap-1">
+          <span class="material-symbols-outlined text-base">logout</span>
+          Sair
+        </button>
+      </div>
+    </header>
+
+    <!-- Add / Edit Form -->
+    <section class="mb-10">
+      <h2 id="form-title" class="text-sm font-semibold uppercase tracking-widest text-on-surface-variant mb-6">Nova Obra</h2>
+      <form id="artwork-form" onsubmit="handleSaveArtwork(event)" class="space-y-5">
+        <input type="hidden" id="artwork-id">
+
+        <div class="grid grid-cols-1 sm:grid-cols-2 gap-4">
+          <!-- Title -->
+          <div class="sm:col-span-2">
+            <label class="block text-sm font-medium text-primary mb-1.5" for="field-title">Título *</label>
+            <input id="field-title" type="text" required placeholder="Ex: Ancestralidade Urbana"
+              class="w-full border border-gray-300 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-primary transition-colors">
+          </div>
+          <!-- Technique -->
+          <div>
+            <label class="block text-sm font-medium text-primary mb-1.5" for="field-technique">Técnica *</label>
+            <input id="field-technique" type="text" required placeholder="Ex: Acrílica sobre tela"
+              class="w-full border border-gray-300 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-primary transition-colors">
+          </div>
+          <!-- Year -->
+          <div>
+            <label class="block text-sm font-medium text-primary mb-1.5" for="field-year">Ano *</label>
+            <input id="field-year" type="number" required placeholder="Ex: 2024" min="1900" max="2099"
+              class="w-full border border-gray-300 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-primary transition-colors">
+          </div>
+          <!-- Dimensions -->
+          <div>
+            <label class="block text-sm font-medium text-primary mb-1.5" for="field-dimensions">Dimensões *</label>
+            <input id="field-dimensions" type="text" required placeholder="Ex: 100 x 140 cm"
+              class="w-full border border-gray-300 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-primary transition-colors">
+          </div>
+          <!-- Price info -->
+          <div>
+            <label class="block text-sm font-medium text-primary mb-1.5" for="field-price">Preço</label>
+            <input id="field-price" type="text" placeholder="Valores sob consulta"
+              class="w-full border border-gray-300 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-primary transition-colors">
+          </div>
+          <!-- Availability -->
+          <div class="sm:col-span-2 flex items-center gap-3">
+            <input id="field-available" type="checkbox" checked
+              class="w-4 h-4 accent-primary cursor-pointer">
+            <label for="field-available" class="text-sm text-primary cursor-pointer">Disponível para venda</label>
+          </div>
+        </div>
+
+        <!-- Images Upload -->
+        <div>
+          <label class="block text-sm font-medium text-primary mb-1.5">Imagens da Obra *</label>
+          <p class="text-xs text-text-muted mb-3">Adicione de 1 a 5 imagens. A primeira será a imagem principal do carrossel.</p>
+          <div id="image-preview-list" class="flex flex-wrap gap-3 mb-3 min-h-[88px] p-3 border border-dashed border-gray-300 rounded bg-white">
+            <p id="no-images-hint" class="text-xs text-text-muted self-center w-full text-center">Nenhuma imagem adicionada</p>
+          </div>
+          <button type="button" onclick="openCloudinaryWidget()"
+            class="flex items-center gap-2 border border-gray-300 rounded px-4 py-2.5 text-sm text-primary hover:border-primary transition-colors">
+            <span class="material-symbols-outlined text-base">add_photo_alternate</span>
+            Adicionar imagens
+          </button>
+        </div>
+
+        <!-- Form Actions -->
+        <div class="flex items-center gap-3 pt-2">
+          <button type="submit" id="save-btn"
+            class="bg-primary text-white px-6 py-2.5 text-sm font-medium tracking-wider uppercase hover:bg-gray-800 transition-colors rounded flex items-center gap-2">
+            <span class="material-symbols-outlined text-base">save</span>
+            Salvar Obra
+          </button>
+          <button type="button" onclick="resetForm()"
+            class="border border-gray-300 text-primary px-6 py-2.5 text-sm font-medium tracking-wider uppercase hover:border-primary transition-colors rounded">
+            Cancelar
+          </button>
+        </div>
+      </form>
+    </section>
+
+    <!-- Artwork List -->
+    <section>
+      <div class="flex items-center justify-between mb-6 border-t border-border-subtle pt-8">
+        <h2 class="text-sm font-semibold uppercase tracking-widest text-on-surface-variant">Obras Cadastradas</h2>
+        <span id="artworks-count" class="text-xs text-text-muted"></span>
+      </div>
+      <div id="artwork-list" class="space-y-4">
+        <!-- Populated by JavaScript -->
+        <div class="text-sm text-text-muted text-center py-8">Carregando obras...</div>
+      </div>
+    </section>
+  </div>
+
+  <!-- Toast Notification -->
+  <div id="toast"
+    class="fixed bottom-6 left-1/2 -translate-x-1/2 bg-primary text-white text-sm px-5 py-3 rounded shadow-lg opacity-0 pointer-events-none z-50">
+  </div>
+
+  <!-- Delete Confirmation Modal -->
+  <div id="delete-modal" class="hidden fixed inset-0 bg-black/40 flex items-center justify-center z-50 px-4">
+    <div class="bg-white rounded-lg shadow-xl p-6 max-w-sm w-full">
+      <h3 class="font-semibold text-primary mb-2">Excluir obra?</h3>
+      <p class="text-sm text-text-muted mb-6">Esta ação não pode ser desfeita. A obra será removida permanentemente do site.</p>
+      <div class="flex gap-3 justify-end">
+        <button onclick="closeDeleteModal()" class="border border-gray-300 text-primary px-4 py-2 text-sm rounded hover:border-primary transition-colors">Cancelar</button>
+        <button id="confirm-delete-btn" class="bg-red-600 text-white px-4 py-2 text-sm rounded hover:bg-red-700 transition-colors">Excluir</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // ─────────────────────────────────────────────────────────────────────────
+    // CONSTANTS & STATE
+    // ─────────────────────────────────────────────────────────────────────────
+
+    const CLOUDINARY_CLOUD_NAME = 'ddfx20xgi';
+    const CLOUDINARY_UPLOAD_PRESET = 'up_rafael';
+
+    let sessionToken = null;
+    let currentImages = []; // Array of Cloudinary URLs for the current form
+    let artworkToDeleteId = null;
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // AUTHENTICATION
+    // ─────────────────────────────────────────────────────────────────────────
+
+    async function handleLogin(event) {
+      event.preventDefault();
+      const password = document.getElementById('password-input').value;
+      const loginBtn = document.getElementById('login-btn');
+      const loginError = document.getElementById('login-error');
+
+      loginBtn.disabled = true;
+      loginBtn.innerHTML = '<span class="spinner"></span>';
+      loginError.classList.add('hidden');
+
+      try {
+        const response = await fetch('/api/auth', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ password }),
+        });
+
+        if (!response.ok) {
+          loginError.classList.remove('hidden');
+          return;
+        }
+
+        const data = await response.json();
+        sessionToken = data.token;
+        sessionStorage.setItem('adminToken', sessionToken);
+
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('admin-panel').classList.remove('hidden');
+        document.getElementById('admin-panel').classList.add('fade-in');
+
+        await loadArtworks();
+      } catch (error) {
+        console.error('[login] Error:', error);
+        loginError.textContent = 'Erro de conexão. Tente novamente.';
+        loginError.classList.remove('hidden');
+      } finally {
+        loginBtn.disabled = false;
+        loginBtn.textContent = 'Entrar';
+      }
+    }
+
+    function handleLogout() {
+      sessionToken = null;
+      sessionStorage.removeItem('adminToken');
+      document.getElementById('admin-panel').classList.add('hidden');
+      document.getElementById('login-screen').classList.remove('hidden');
+      document.getElementById('password-input').value = '';
+    }
+
+    // Restore session on page reload
+    window.addEventListener('DOMContentLoaded', () => {
+      const savedToken = sessionStorage.getItem('adminToken');
+      if (savedToken) {
+        sessionToken = savedToken;
+        document.getElementById('login-screen').classList.add('hidden');
+        document.getElementById('admin-panel').classList.remove('hidden');
+        loadArtworks();
+      }
+    });
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // CLOUDINARY UPLOAD WIDGET
+    // ─────────────────────────────────────────────────────────────────────────
+
+    function openCloudinaryWidget() {
+      if (currentImages.length >= 5) {
+        showToast('Máximo de 5 imagens por obra.', true);
+        return;
+      }
+
+      const widget = cloudinary.createUploadWidget(
+        {
+          cloudName: CLOUDINARY_CLOUD_NAME,
+          uploadPreset: CLOUDINARY_UPLOAD_PRESET,
+          multiple: true,
+          maxFiles: 5 - currentImages.length,
+          sources: ['local', 'camera'],
+          language: 'pt',
+          text: {
+            pt: {
+              or: 'ou',
+              back: 'Voltar',
+              advanced: 'Avançado',
+              close: 'Fechar',
+              no_results: 'Sem resultados',
+              menu: { files: 'Meus Arquivos', camera: 'Câmera' },
+              selection_counter: { file: 'arquivo', files: 'arquivos' },
+              queue: {
+                title: 'Fila de Upload',
+                done: 'Concluído',
+                mini_title: 'Enviados',
+                mini_title_uploading: 'Enviando...',
+                statuses: {
+                  uploading: 'Enviando...',
+                  error: 'Erro',
+                  uploaded: 'Concluído',
+                  aborted: 'Cancelado',
+                },
+              },
+              crop: { title: 'Recortar', skip_btn: 'Pular', reset_btn: 'Resetar', close_prompt: 'Fechar recorte?', image_error: 'Erro ao carregar imagem' },
+              local: { browse: 'Selecionar arquivos', dd_title_single: 'Arraste e solte aqui', dd_title_multi: 'Arraste e solte aqui', drop_title_single: 'Solte o arquivo', drop_title_multiple: 'Solte os arquivos' },
+              camera: { capture: 'Capturar', cancel: 'Cancelar', take_pic: 'Tirar foto', explanation: 'Use sua câmera para capturar a imagem', camera_error: 'Câmera não disponível', retry: 'Tentar novamente', or_title: 'Ou' },
+            }
+          },
+          styles: {
+            palette: {
+              window: '#FFFFFF',
+              windowBorder: '#E5E5E5',
+              tabIcon: '#000000',
+              menuIcons: '#666666',
+              textDark: '#000000',
+              textLight: '#FFFFFF',
+              link: '#000000',
+              action: '#000000',
+              inactiveTabIcon: '#999999',
+              error: '#b7102a',
+              inProgress: '#000000',
+              complete: '#000000',
+              sourceBg: '#F9F9F9',
+            },
+            fonts: { default: null, "'Hanken Grotesk', sans-serif": { url: 'https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500&display=swap', active: true } },
+          },
+        },
+        (error, result) => {
+          if (error) {
+            console.error('[cloudinary] Upload error:', error);
+            showToast('Erro no upload. Tente novamente.', true);
+            return;
+          }
+          if (result.event === 'success') {
+            currentImages.push(result.info.secure_url);
+            renderImagePreviews();
+          }
+        }
+      );
+
+      widget.open();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // IMAGE PREVIEW MANAGEMENT
+    // ─────────────────────────────────────────────────────────────────────────
+
+    function renderImagePreviews() {
+      const container = document.getElementById('image-preview-list');
+      const hint = document.getElementById('no-images-hint');
+
+      if (currentImages.length === 0) {
+        container.innerHTML = '<p id="no-images-hint" class="text-xs text-text-muted self-center w-full text-center">Nenhuma imagem adicionada</p>';
+        return;
+      }
+
+      hint && hint.remove();
+      container.innerHTML = currentImages.map((url, index) => `
+        <div class="relative group">
+          <img src="${url}" alt="Imagem ${index + 1}" class="artwork-image-preview border border-gray-200">
+          ${index === 0 ? '<span class="absolute -top-1.5 -right-1.5 bg-primary text-white text-[9px] px-1 py-0.5 rounded font-medium">CAPA</span>' : ''}
+          <button type="button"
+            onclick="removeImage(${index})"
+            class="absolute top-0 right-0 w-5 h-5 bg-red-600 text-white rounded-full items-center justify-center text-xs hidden group-hover:flex"
+            aria-label="Remover imagem">×</button>
+        </div>
+      `).join('');
+    }
+
+    function removeImage(index) {
+      currentImages.splice(index, 1);
+      renderImagePreviews();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // ARTWORK CRUD
+    // ─────────────────────────────────────────────────────────────────────────
+
+    async function loadArtworks() {
+      const listContainer = document.getElementById('artwork-list');
+      const countEl = document.getElementById('artworks-count');
+      listContainer.innerHTML = '<div class="text-sm text-text-muted text-center py-8">Carregando obras...</div>';
+
+      try {
+        const response = await fetch('/api/artworks');
+        if (!response.ok) throw new Error('Failed to fetch artworks');
+
+        const artworks = await response.json();
+        countEl.textContent = `${artworks.length} obra${artworks.length !== 1 ? 's' : ''}`;
+
+        if (artworks.length === 0) {
+          listContainer.innerHTML = '<div class="text-sm text-text-muted text-center py-8">Nenhuma obra cadastrada ainda.</div>';
+          return;
+        }
+
+        listContainer.innerHTML = artworks.map(renderArtworkCard).join('');
+      } catch (error) {
+        console.error('[loadArtworks] Error:', error);
+        listContainer.innerHTML = '<div class="text-sm text-red-600 text-center py-8">Erro ao carregar obras. Recarregue a página.</div>';
+      }
+    }
+
+    function renderArtworkCard(artwork) {
+      const coverImage = artwork.images?.[0] ?? '';
+      const imageCount = artwork.images?.length ?? 0;
+      const availabilityBadge = artwork.is_available
+        ? '<span class="text-xs bg-green-50 text-green-700 px-2 py-0.5 rounded font-medium">Disponível</span>'
+        : '<span class="text-xs bg-gray-100 text-gray-500 px-2 py-0.5 rounded font-medium">Vendida</span>';
+
+      return `
+        <div class="flex items-start gap-4 p-4 bg-white border border-border-subtle rounded fade-in" id="artwork-card-${artwork.id}">
+          <div class="w-20 h-20 flex-shrink-0 bg-gallery-gray rounded overflow-hidden border border-gray-200">
+            ${coverImage
+              ? `<img src="${coverImage}" alt="${artwork.title}" class="w-full h-full object-cover">`
+              : '<div class="w-full h-full flex items-center justify-center text-gray-300"><span class="material-symbols-outlined text-3xl">image</span></div>'
+            }
+          </div>
+          <div class="flex-1 min-w-0">
+            <div class="flex items-start justify-between gap-2">
+              <h3 class="font-medium text-primary text-sm leading-tight">${artwork.title}</h3>
+              ${availabilityBadge}
+            </div>
+            <p class="text-xs text-text-muted mt-0.5">${artwork.technique}, ${artwork.year}</p>
+            <p class="text-xs text-text-muted">${artwork.dimensions}</p>
+            <p class="text-xs text-text-muted mt-0.5">${imageCount} imagem${imageCount !== 1 ? 'ns' : ''}</p>
+          </div>
+          <div class="flex flex-col gap-2 flex-shrink-0">
+            <button onclick="startEditArtwork(${JSON.stringify(artwork).replace(/"/g, '&quot;')})"
+              class="flex items-center gap-1 text-xs text-primary border border-gray-300 px-3 py-1.5 rounded hover:border-primary transition-colors">
+              <span class="material-symbols-outlined text-sm">edit</span>
+              Editar
+            </button>
+            <button onclick="openDeleteModal('${artwork.id}')"
+              class="flex items-center gap-1 text-xs text-red-600 border border-red-200 px-3 py-1.5 rounded hover:border-red-400 transition-colors">
+              <span class="material-symbols-outlined text-sm">delete</span>
+              Excluir
+            </button>
+          </div>
+        </div>
+      `;
+    }
+
+    async function handleSaveArtwork(event) {
+      event.preventDefault();
+
+      if (currentImages.length === 0) {
+        showToast('Adicione pelo menos uma imagem.', true);
+        return;
+      }
+
+      const artworkId = document.getElementById('artwork-id').value;
+      const payload = {
+        title: document.getElementById('field-title').value.trim(),
+        technique: document.getElementById('field-technique').value.trim(),
+        year: parseInt(document.getElementById('field-year').value, 10),
+        dimensions: document.getElementById('field-dimensions').value.trim(),
+        price_info: document.getElementById('field-price').value.trim() || 'Valores sob consulta',
+        images: currentImages,
+        is_available: document.getElementById('field-available').checked,
+      };
+
+      const isEdit = Boolean(artworkId);
+      const url = isEdit ? `/api/artworks-admin?id=${artworkId}` : '/api/artworks-admin';
+      const method = isEdit ? 'PUT' : 'POST';
+
+      const saveBtn = document.getElementById('save-btn');
+      saveBtn.disabled = true;
+      saveBtn.innerHTML = '<span class="spinner"></span> Salvando...';
+
+      try {
+        const response = await fetch(url, {
+          method,
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${sessionToken}`,
+          },
+          body: JSON.stringify(payload),
+        });
+
+        if (!response.ok) {
+          const error = await response.json();
+          throw new Error(error.error ?? 'Unknown error');
+        }
+
+        showToast(isEdit ? 'Obra atualizada com sucesso!' : 'Obra cadastrada com sucesso!');
+        resetForm();
+        await loadArtworks();
+      } catch (error) {
+        console.error('[saveArtwork] Error:', error);
+        showToast(`Erro ao salvar: ${error.message}`, true);
+      } finally {
+        saveBtn.disabled = false;
+        saveBtn.innerHTML = '<span class="material-symbols-outlined text-base">save</span> Salvar Obra';
+      }
+    }
+
+    function startEditArtwork(artwork) {
+      document.getElementById('form-title').textContent = 'Editar Obra';
+      document.getElementById('artwork-id').value = artwork.id;
+      document.getElementById('field-title').value = artwork.title;
+      document.getElementById('field-technique').value = artwork.technique;
+      document.getElementById('field-year').value = artwork.year;
+      document.getElementById('field-dimensions').value = artwork.dimensions;
+      document.getElementById('field-price').value = artwork.price_info;
+      document.getElementById('field-available').checked = artwork.is_available;
+
+      currentImages = [...(artwork.images ?? [])];
+      renderImagePreviews();
+
+      // Scroll to form smoothly
+      document.getElementById('artwork-form').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function resetForm() {
+      document.getElementById('form-title').textContent = 'Nova Obra';
+      document.getElementById('artwork-id').value = '';
+      document.getElementById('artwork-form').reset();
+      currentImages = [];
+      renderImagePreviews();
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // DELETE MODAL
+    // ─────────────────────────────────────────────────────────────────────────
+
+    function openDeleteModal(id) {
+      artworkToDeleteId = id;
+      document.getElementById('delete-modal').classList.remove('hidden');
+      document.getElementById('delete-modal').classList.add('flex');
+      document.getElementById('confirm-delete-btn').onclick = confirmDelete;
+    }
+
+    function closeDeleteModal() {
+      artworkToDeleteId = null;
+      document.getElementById('delete-modal').classList.add('hidden');
+      document.getElementById('delete-modal').classList.remove('flex');
+    }
+
+    async function confirmDelete() {
+      if (!artworkToDeleteId) return;
+
+      const deleteBtn = document.getElementById('confirm-delete-btn');
+      deleteBtn.disabled = true;
+      deleteBtn.textContent = 'Excluindo...';
+
+      try {
+        const response = await fetch(`/api/artworks-admin?id=${artworkToDeleteId}`, {
+          method: 'DELETE',
+          headers: { Authorization: `Bearer ${sessionToken}` },
+        });
+
+        if (!response.ok) throw new Error('Failed to delete');
+
+        closeDeleteModal();
+        showToast('Obra excluída com sucesso.');
+        await loadArtworks();
+      } catch (error) {
+        console.error('[deleteArtwork] Error:', error);
+        showToast('Erro ao excluir obra.', true);
+      } finally {
+        deleteBtn.disabled = false;
+        deleteBtn.textContent = 'Excluir';
+      }
+    }
+
+    // ─────────────────────────────────────────────────────────────────────────
+    // TOAST NOTIFICATION
+    // ─────────────────────────────────────────────────────────────────────────
+
+    let toastTimeout = null;
+
+    function showToast(message, isError = false) {
+      const toast = document.getElementById('toast');
+      toast.textContent = message;
+      toast.className = `fixed bottom-6 left-1/2 -translate-x-1/2 text-white text-sm px-5 py-3 rounded shadow-lg z-50 ${isError ? 'bg-red-600' : 'bg-primary'}`;
+      toast.style.opacity = '1';
+      toast.style.pointerEvents = 'auto';
+
+      clearTimeout(toastTimeout);
+      toastTimeout = setTimeout(() => {
+        toast.style.opacity = '0';
+        toast.style.pointerEvents = 'none';
+      }, 3500);
+    }
+  </script>
+
+</body>
+</html>

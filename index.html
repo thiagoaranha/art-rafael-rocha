@@ -1,0 +1,373 @@
+<!DOCTYPE html>
+<html lang="pt-BR" style="">
+
+<head>
+    <meta charset="utf-8">
+    <meta content="width=device-width, initial-scale=1.0" name="viewport">
+    <title>Rafael Rocha | Catálogo de Arte</title>
+    <script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@300;400;700&amp;family=Hanken+Grotesk:wght@300;400;500;600&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <link
+        href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap"
+        rel="stylesheet">
+    <script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "surface-tint": "#5f5e5e",
+                        "on-tertiary-fixed": "#271900",
+                        "on-surface-variant": "#444748",
+                        "on-secondary-container": "#fffbff",
+                        "on-surface": "#1a1c1c",
+                        "inverse-primary": "#c8c6c5",
+                        "on-primary-fixed": "#1c1b1b",
+                        "surface-container-highest": "#e2e2e2",
+                        "surface-dim": "#dadada",
+                        "on-primary": "#ffffff",
+                        "on-secondary": "#ffffff",
+                        "on-secondary-fixed-variant": "#92001c",
+                        "tertiary-container": "#271900",
+                        "on-primary-fixed-variant": "#474746",
+                        "on-primary-container": "#858383",
+                        "text-muted": "#666666",
+                        "secondary-fixed-dim": "#ffb3b1",
+                        "on-error-container": "#93000a",
+                        "gallery-gray": "#F9F9F9",
+                        "surface-bright": "#f9f9f9",
+                        "surface-container-high": "#e8e8e8",
+                        "primary-fixed": "#e5e2e1",
+                        "primary-container": "#1c1b1b",
+                        "outline-variant": "#c4c7c7",
+                        "on-background": "#1a1c1c",
+                        "error": "#ba1a1a",
+                        "art-blue": "#219EBC",
+                        "secondary-fixed": "#ffdad8",
+                        "on-tertiary-fixed-variant": "#5e4100",
+                        "surface-container": "#eeeeee",
+                        "tertiary": "#000000",
+                        "border-subtle": "#F0F0F0",
+                        "on-secondary-fixed": "#410007",
+                        "background": "#f9f9f9",
+                        "on-error": "#ffffff",
+                        "surface-container-lowest": "#ffffff",
+                        "surface": "#f9f9f9",
+                        "inverse-on-surface": "#f0f1f1",
+                        "tertiary-fixed": "#ffdea9",
+                        "primary": "#000000",
+                        "surface-container-low": "#f3f3f4",
+                        "outline": "#747878",
+                        "on-tertiary": "#ffffff",
+                        "primary-fixed-dim": "#c8c6c5",
+                        "error-container": "#ffdad6",
+                        "surface-variant": "#e2e2e2",
+                        "on-tertiary-container": "#ad7b00",
+                        "secondary-container": "#db313f",
+                        "secondary": "#b7102a",
+                        "tertiary-fixed-dim": "#ffba27",
+                        "inverse-surface": "#2f3131"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "container-max-width": "800px",
+                        "element-gap": "12px",
+                        "gutter-grid": "20px",
+                        "section-gap": "60px",
+                        "margin-page": "24px",
+                        "margin-page-mobile": "16px"
+                    },
+                    "fontFamily": {
+                        "section-label": ["Hanken Grotesk"],
+                        "body-lg": ["Hanken Grotesk"],
+                        "detail-sm": ["Hanken Grotesk"],
+                        "headline-md": ["Playfair Display"],
+                        "body-md": ["Hanken Grotesk"],
+                        "headline-lg-mobile": ["Playfair Display"],
+                        "headline-lg": ["Playfair Display"],
+                        "caption": ["Hanken Grotesk"]
+                    },
+                    "fontSize": {
+                        "section-label": ["14px", { "lineHeight": "1.5", "letterSpacing": "1px", "fontWeight": "600" }],
+                        "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "detail-sm": ["14px", { "lineHeight": "1.4", "fontWeight": "400" }],
+                        "headline-md": ["24px", { "lineHeight": "1.3", "letterSpacing": "3px", "fontWeight": "400" }],
+                        "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
+                        "headline-lg-mobile": ["32px", { "lineHeight": "1.2", "letterSpacing": "1px", "fontWeight": "300" }],
+                        "headline-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "2px", "fontWeight": "300" }],
+                        "caption": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.5px", "fontWeight": "500" }]
+                    }
+                },
+            },
+        }
+    </script>
+    <style>
+        body {
+            background-color: #f9f9f9;
+            color: #1a1c1c;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        .art-carousel {
+            scroll-snap-type: x mandatory;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .art-carousel::-webkit-scrollbar {
+            display: none;
+        }
+
+        .art-slide {
+            scroll-snap-align: center;
+            flex: 0 0 100%;
+        }
+
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+        }
+
+        .fab-shadow {
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .hide-scrollbar::-webkit-scrollbar {
+            display: none;
+        }
+    </style>
+</head>
+
+<body class="font-body-md text-body-md max-w-[800px] mx-auto min-h-screen pb-20">
+    <!-- TopAppBar -->
+    <header
+        class="bg-surface-container-lowest dark:bg-surface-container-lowest text-primary dark:text-primary docked full-width top-0 z-50 border-b border-border-subtle flat no shadows sticky">
+        <div
+            class="flex justify-center items-center w-full px-margin-page-mobile h-16 max-w-container-max-width mx-auto">
+            <h1 class="font-headline-md text-headline-md tracking-widest text-primary dark:text-primary text-center">
+                RAFAEL ROCHA
+            </h1>
+        </div>
+    </header>
+    <main class="px-margin-page-mobile space-y-section-gap pt-10">
+        <!-- Hero/Bio Section -->
+        <section class="flex flex-col items-center text-center">
+            <div class="w-32 h-32 rounded-full overflow-hidden mb-6 border border-border-subtle bg-gallery-gray">
+                <img class="w-full h-full object-cover" data-alt="Foto de Rafael Rocha"
+                    src="https://res.cloudinary.com/ddfx20xgi/image/upload/v1782409959/WhatsApp_Image_2026-06-25_at_14.51.35_ntbdf1.jpg">
+            </div>
+            <h2 class="font-headline-lg-mobile text-headline-lg-mobile mb-4">A Essência do Contemporâneo</h2>
+            <div class="relative" id="bio-container">
+                <p class="font-body-md text-body-md text-on-surface-variant line-clamp-3 mb-2 transition-all duration-500"
+                    id="bio-text">
+                    A verdadeira sofisticação mora na sensibilidade do cotidiano. Nascido no Recife, em 1975, o artista
+                    visual pernambucano Rafael Rocha transformou traços em histórias, consolidando-se como um dos nomes
+                    mais vibrantes e destacados da arte brasileira atual. Seu trabalho é um mergulho afetivo na cultura
+                    nordestina, mas sem cair no óbvio. Com um estilo figurativo, único e transbordante de identidade,
+                    Rafael costuma se definir de forma precisa: “Sou um poeta que pinta”. E suas telas são, de fato,
+                    versos cromáticos. A paleta de cores que utiliza não é um mero recurso estético; é um convite à
+                    alegria, projetada para levar harmonia e luz aos espaços de quem adquire suas obras. Essa assinatura
+                    visual tão autêntica cruzou fronteiras. Com mais de 300 obras espalhadas pelo mundo, Rafael já
+                    conquistou prêmios, estampou páginas de livros didáticos e de história da arte, é figura
+                    constantemente na mídia nacional. Suas criações atraíram o olhar de colecionadores ilustres, e hoje
+                    inspiram a nova geração: escolas de todo o Brasil utilizam suas telas em salas de aula, onde
+                    estudantes recriam e reinterpretam seu universo em releituras cheias de vida. Sempre em movimento, o
+                    artista expandiu recentemente seu território de criação para a tridimensionalidade, incorporando a
+                    cerâmica ao seu repertório. Na argila, a mesma poesia que antes habitava as telas ganha volume,
+                    texturas e novas nuances.​Navegar por este catálogo é mais do que contemplar quadros e esculturas; é
+                    entrar em contato com uma arte viva, pulsante e essencialmente brasileira. Uma oportunidade única de
+                    levar para casa um pedaço do lirismo solar de Rafael Rocha.
+                </p>
+                <button
+                    class="font-section-label text-section-label text-primary border-b border-primary pt-2 uppercase tracking-wider hover:opacity-70 transition-opacity"
+                    id="bio-btn" onclick="toggleBio()">
+                    Ver biografia completa
+                </button>
+            </div>
+        </section>
+        <!-- Catalog Section -->
+        <section class="space-y-8" id="catalog-section">
+            <h3
+                class="font-section-label text-section-label uppercase text-on-surface-variant tracking-[2px] border-b border-border-subtle pb-4">
+                Obras Disponíveis</h3>
+
+            <!-- Dynamic artwork cards are injected here by JavaScript -->
+            <div id="artwork-list">
+                <!-- Loading skeleton -->
+                <div id="artwork-loading" class="space-y-8">
+                    <div class="space-y-4 animate-pulse">
+                        <div class="aspect-[3/4] bg-gray-100 rounded"></div>
+                        <div class="space-y-2">
+                            <div class="h-5 bg-gray-100 rounded w-2/3"></div>
+                            <div class="h-4 bg-gray-100 rounded w-1/2"></div>
+                            <div class="h-4 bg-gray-100 rounded w-1/3"></div>
+                        </div>
+                    </div>
+                    <div class="space-y-4 animate-pulse">
+                        <div class="aspect-[3/4] bg-gray-100 rounded"></div>
+                        <div class="space-y-2">
+                            <div class="h-5 bg-gray-100 rounded w-3/4"></div>
+                            <div class="h-4 bg-gray-100 rounded w-1/2"></div>
+                            <div class="h-4 bg-gray-100 rounded w-1/3"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+        <!-- Footer -->
+        <footer
+            class="w-full py-10 mb-16 border-t border-border-subtle flex flex-col items-center gap-4 text-center px-margin-page-mobile text-text-muted dark:text-text-muted font-caption text-caption">
+            <p class="">© 2026 Rafael Rocha. Todos os direitos reservados.</p>
+            <!--<div class="flex gap-4">
+                <a class="no-underline hover:text-primary transition-colors" href="#">Termos de Uso</a>
+                <a class="no-underline hover:text-primary transition-colors" href="#">Privacidade</a>
+            </div>-->
+        </footer>
+    </main>
+    <!-- Floating Action Button -->
+    <a class="fixed bottom-24 right-6 w-14 h-14 text-on-secondary rounded-full flex items-center justify-center fab-shadow z-40 transition-transform active:scale-90"
+        href="https://wa.me/yournumber" style="background-color: rgb(37, 211, 102); border-radius: 50%;">
+        <svg fill="currentColor" height="28" viewBox="0 0 24 24" width="28" xmlns="http://www.w3.org/2000/svg">
+            <path
+                d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.503-2.961-2.617-.087-.114-.708-.941-.708-1.792 0-.85.445-1.267.604-1.442.159-.175.348-.218.463-.218.117 0 .231.001.334.005.109.004.258-.041.402.305.144.347.492 1.197.535 1.284.043.088.072.19.014.305-.058.114-.087.19-.174.29-.087.101-.183.225-.261.303-.095.095-.192.198-.083.385.109.187.483.797 1.037 1.288.714.633 1.314.83 1.503.923.189.092.3.076.413-.053.114-.129.487-.568.616-.763.129-.194.258-.163.435-.097.177.065 1.121.528 1.314.625.193.097.322.144.369.224.048.08.048.462-.096.867zM12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2z">
+            </path>
+        </svg>
+    </a>
+
+    <script>
+        // ─────────────────────────────────────────────────────────────
+        // BIO TOGGLE
+        // ─────────────────────────────────────────────────────────────
+        function toggleBio() {
+            const bioText = document.getElementById('bio-text');
+            const bioBtn = document.getElementById('bio-btn');
+
+            if (bioText.classList.contains('line-clamp-3')) {
+                bioText.classList.remove('line-clamp-3');
+                bioBtn.textContent = 'Ver menos';
+            } else {
+                bioText.classList.add('line-clamp-3');
+                bioBtn.textContent = 'Ver biografia completa';
+            }
+        }
+
+        // ─────────────────────────────────────────────────────────────
+        // CAROUSEL DOT INDICATOR — attached to a specific carousel element
+        // ─────────────────────────────────────────────────────────────
+        function attachCarouselDots(carousel) {
+            const dotsContainer = carousel.nextElementSibling;
+            if (!dotsContainer) return;
+            const dots = dotsContainer.children;
+
+            carousel.addEventListener('scroll', () => {
+                const index = Math.round(carousel.scrollLeft / carousel.offsetWidth);
+                Array.from(dots).forEach((dot, i) => {
+                    dot.classList.toggle('bg-primary', i === index);
+                    dot.classList.toggle('bg-outline-variant', i !== index);
+                });
+            }, { passive: true });
+        }
+
+        // ─────────────────────────────────────────────────────────────
+        // ARTWORK CARD RENDERER
+        // ─────────────────────────────────────────────────────────────
+
+        /**
+         * Builds the HTML for a single artwork card with carousel.
+         * @param {object} artwork - Artwork data from the API.
+         * @returns {string} HTML string for the card.
+         */
+        function buildArtworkCard(artwork) {
+            const slides = artwork.images.map((imageUrl, index) => `
+                <div class="art-slide aspect-[3/4] bg-gallery-gray ${ index === 0 ? 'relative overflow-hidden group' : '' }">
+                    <img
+                        class="w-full h-full object-contain ${ index === 0 ? 'transition-transform duration-700 group-hover:scale-105' : '' }"
+                        src="${imageUrl}"
+                        alt="${artwork.title} — imagem ${index + 1}"
+                        loading="${ index === 0 ? 'eager' : 'lazy' }"
+                    >
+                </div>
+            `).join('');
+
+            const dots = artwork.images.map((_, index) => `
+                <div class="w-1.5 h-1.5 rounded-full ${ index === 0 ? 'bg-primary' : 'bg-outline-variant' }"></div>
+            `).join('');
+
+            // Only render dots container if there are multiple images
+            const dotsHtml = artwork.images.length > 1
+                ? `<div class="flex justify-center gap-2">${dots}</div>`
+                : '';
+
+            return `
+                <div class="space-y-4">
+                    <div class="art-carousel flex overflow-x-auto gap-0 rounded-DEFAULT">
+                        ${slides}
+                    </div>
+                    ${dotsHtml}
+                    <div class="space-y-1">
+                        <h4 class="font-headline-md text-headline-md !tracking-normal">${artwork.title}</h4>
+                        <p class="font-body-md text-body-md text-on-surface-variant">${artwork.technique}, ${artwork.year}</p>
+                        <p class="font-detail-sm text-detail-sm text-text-muted">${artwork.dimensions}</p>
+                        <p class="font-section-label text-section-label text-secondary pt-2">${artwork.price_info}</p>
+                    </div>
+                </div>
+            `;
+        }
+
+        // ─────────────────────────────────────────────────────────────
+        // LOAD ARTWORKS FROM API
+        // ─────────────────────────────────────────────────────────────
+        async function loadArtworks() {
+            const listContainer = document.getElementById('artwork-list');
+
+            try {
+                const response = await fetch('/api/artworks');
+
+                if (!response.ok) {
+                    throw new Error(`API responded with status ${response.status}`);
+                }
+
+                const artworks = await response.json();
+
+                if (artworks.length === 0) {
+                    listContainer.innerHTML = `
+                        <p class="font-body-md text-body-md text-on-surface-variant text-center py-10">
+                            Nenhuma obra disponível no momento.
+                        </p>
+                    `;
+                    return;
+                }
+
+                // Render all artwork cards (API already returns newest-first)
+                listContainer.innerHTML = artworks.map(buildArtworkCard).join('');
+
+                // Attach scroll listeners to each carousel after rendering
+                listContainer.querySelectorAll('.art-carousel').forEach(attachCarouselDots);
+
+            } catch (error) {
+                console.error('[loadArtworks] Failed to fetch artworks:', error);
+                listContainer.innerHTML = `
+                    <p class="font-body-md text-body-md text-on-surface-variant text-center py-10">
+                        Não foi possível carregar as obras. Tente novamente mais tarde.
+                    </p>
+                `;
+            }
+        }
+
+        // Kick off on page load
+        loadArtworks();
+    </script>
+
+
+</body>
+
+</html>

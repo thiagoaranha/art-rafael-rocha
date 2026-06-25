@@ -235,7 +235,9 @@
     </main>
     <!-- Floating Action Button -->
     <a class="fixed bottom-24 right-6 w-14 h-14 text-on-secondary rounded-full flex items-center justify-center fab-shadow z-40 transition-transform active:scale-90"
-        href="https://wa.me/yournumber" style="background-color: rgb(37, 211, 102); border-radius: 50%;">
+        id="whatsapp-fab"
+        href="#"
+        style="background-color: rgb(37, 211, 102); border-radius: 50%;">
         <svg fill="currentColor" height="28" viewBox="0 0 24 24" width="28" xmlns="http://www.w3.org/2000/svg">
             <path
                 d="M12.031 6.172c-3.181 0-5.767 2.586-5.768 5.766-.001 1.298.38 2.27 1.019 3.287l-.582 2.128 2.182-.573c.978.58 1.911.928 3.145.929 3.178 0 5.767-2.587 5.768-5.766 0-3.18-2.587-5.771-5.764-5.771zm3.392 8.244c-.144.405-.837.774-1.17.824-.299.045-.677.063-1.092-.069-.252-.08-.575-.187-.988-.365-1.739-.751-2.874-2.503-2.961-2.617-.087-.114-.708-.941-.708-1.792 0-.85.445-1.267.604-1.442.159-.175.348-.218.463-.218.117 0 .231.001.334.005.109.004.258-.041.402.305.144.347.492 1.197.535 1.284.043.088.072.19.014.305-.058.114-.087.19-.174.29-.087.101-.183.225-.261.303-.095.095-.192.198-.083.385.109.187.483.797 1.037 1.288.714.633 1.314.83 1.503.923.189.092.3.076.413-.053.114-.129.487-.568.616-.763.129-.194.258-.163.435-.097.177.065 1.121.528 1.314.625.193.097.322.144.369.224.048.08.048.462-.096.867zM12 2c5.523 0 10 4.477 10 10s-4.477 10-10 10S2 17.523 2 12 6.477 2 12 2z">
@@ -363,7 +365,29 @@
             }
         }
 
-        // Kick off on page load
+        // ─────────────────────────────────────────────────────────────
+        // LOAD PUBLIC CONFIG (WhatsApp number, etc.) FROM API
+        // ─────────────────────────────────────────────────────────────
+        async function loadConfig() {
+            try {
+                const response = await fetch('/api/config');
+                if (!response.ok) return;
+
+                const config = await response.json();
+
+                if (config.whatsappNumber) {
+                    const fab = document.getElementById('whatsapp-fab');
+                    fab.href = `https://wa.me/${config.whatsappNumber}`;
+                    fab.setAttribute('target', '_blank');
+                    fab.setAttribute('rel', 'noopener noreferrer');
+                }
+            } catch (error) {
+                console.error('[loadConfig] Failed to fetch config:', error);
+            }
+        }
+
+        // Kick off both requests in parallel on page load
+        loadConfig();
         loadArtworks();
     </script>
 

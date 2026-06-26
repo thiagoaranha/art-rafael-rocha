@@ -11,6 +11,7 @@ CREATE TABLE IF NOT EXISTS artworks (
   year          INTEGER     NOT NULL,
   dimensions    TEXT        NOT NULL,
   price_info    TEXT        NOT NULL DEFAULT 'Valores sob consulta',
+  description   TEXT,
   images        TEXT[]      NOT NULL DEFAULT '{}',
   is_available  BOOLEAN     NOT NULL DEFAULT TRUE,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()

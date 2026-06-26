@@ -29,7 +29,7 @@ export default async (request) => {
     const sql = neon(process.env.DATABASE_URL);
 
     const artworks = await sql`
-      SELECT id, title, technique, year, dimensions, price_info, images, is_available, created_at
+      SELECT id, title, technique, year, dimensions, price_info, description, images, is_available, created_at
       FROM artworks
       WHERE is_available = TRUE
       ORDER BY created_at DESC

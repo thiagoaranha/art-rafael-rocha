@@ -139,6 +139,12 @@
             <input id="field-price" type="text" placeholder="Valores sob consulta"
               class="w-full border border-gray-300 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-primary transition-colors">
           </div>
+          <!-- Description -->
+          <div class="sm:col-span-2">
+            <label class="block text-sm font-medium text-primary mb-1.5" for="field-description">Descrição</label>
+            <textarea id="field-description" rows="4" maxlength="1500" placeholder="Descrição da obra (opcional, máx 1500 caracteres)"
+              class="w-full border border-gray-300 rounded px-4 py-2.5 text-sm focus:outline-none focus:border-primary transition-colors"></textarea>
+          </div>
           <!-- Availability -->
           <div class="sm:col-span-2 flex items-center gap-3">
             <input id="field-available" type="checkbox" checked
@@ -475,6 +481,7 @@
         year: parseInt(document.getElementById('field-year').value, 10),
         dimensions: document.getElementById('field-dimensions').value.trim(),
         price_info: document.getElementById('field-price').value.trim(),
+        description: document.getElementById('field-description').value.trim(),
         images: currentImages,
         is_available: document.getElementById('field-available').checked,
       };
@@ -522,6 +529,7 @@
       document.getElementById('field-year').value = artwork.year;
       document.getElementById('field-dimensions').value = artwork.dimensions;
       document.getElementById('field-price').value = artwork.price_info;
+      document.getElementById('field-description').value = artwork.description ?? '';
       document.getElementById('field-available').checked = artwork.is_available;
 
       currentImages = [...(artwork.images ?? [])];

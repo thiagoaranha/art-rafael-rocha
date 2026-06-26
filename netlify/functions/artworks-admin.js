@@ -77,13 +77,14 @@ export default async (request) => {
       }
 
       const [newArtwork] = await sql`
-        INSERT INTO artworks (title, technique, year, dimensions, price_info, images, is_available)
+        INSERT INTO artworks (title, technique, year, dimensions, price_info, description, images, is_available)
         VALUES (
           ${body.title},
           ${body.technique},
           ${Number(body.year)},
           ${body.dimensions},
           ${body.price_info ?? 'Valores sob consulta'},
+          ${body.description ?? null},
           ${body.images},
           ${body.is_available ?? true}
         )
@@ -123,6 +124,7 @@ export default async (request) => {
           year         = ${Number(body.year)},
           dimensions   = ${body.dimensions},
           price_info   = ${body.price_info ?? 'Valores sob consulta'},
+          description  = ${body.description ?? null},
           images       = ${body.images},
           is_available = ${body.is_available ?? true}
         WHERE id = ${artworkId}

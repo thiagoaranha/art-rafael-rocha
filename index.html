@@ -102,10 +102,10 @@
                         "section-label": ["14px", { "lineHeight": "1.5", "letterSpacing": "1px", "fontWeight": "600" }],
                         "body-lg": ["18px", { "lineHeight": "1.6", "fontWeight": "400" }],
                         "detail-sm": ["14px", { "lineHeight": "1.4", "fontWeight": "400" }],
-                        "headline-sm": ["20px", { "lineHeight": "1.3", "letterSpacing": "2px", "fontWeight": "400" }],
+                        "headline-sm": ["18px", { "lineHeight": "1.3", "letterSpacing": "2px", "fontWeight": "400" }],
                         "headline-md": ["28px", { "lineHeight": "1.3", "letterSpacing": "3px", "fontWeight": "400" }],
                         "body-md": ["16px", { "lineHeight": "1.6", "fontWeight": "400" }],
-                        "headline-lg-mobile": ["22px", { "lineHeight": "1.2", "letterSpacing": "1px", "fontWeight": "300" }],
+                        "headline-lg-mobile": ["20px", { "lineHeight": "1.2", "letterSpacing": "1px", "fontWeight": "300" }],
                         "headline-lg": ["40px", { "lineHeight": "1.2", "letterSpacing": "2px", "fontWeight": "300" }],
                         "caption": ["12px", { "lineHeight": "1.2", "letterSpacing": "0.5px", "fontWeight": "500" }]
                     }
@@ -149,7 +149,7 @@
     </style>
 </head>
 
-<body class="font-body-md text-body-md max-w-[800px] mx-auto min-h-screen pb-20">
+<body class="font-body-md text-body-md max-w-[800px] mx-auto min-h-screen">
     <!-- TopAppBar -->
     <header
         class="bg-surface-container-lowest dark:bg-surface-container-lowest text-primary dark:text-primary docked full-width top-0 z-50 border-b border-border-subtle flat no shadows sticky">
@@ -229,7 +229,7 @@
         </section>
         <!-- Footer -->
         <footer
-            class="w-full py-10 mb-16 border-t border-border-subtle flex flex-col items-center gap-4 text-center px-margin-page-mobile text-text-muted dark:text-text-muted font-caption text-caption">
+            class="w-full py-10 border-t border-border-subtle flex flex-col items-center gap-4 text-center px-margin-page-mobile text-text-muted dark:text-text-muted font-caption text-caption">
             <p class="">© 2026 Rafael Rocha. Todos os direitos reservados.</p>
             <!--<div class="flex gap-4">
                 <a class="no-underline hover:text-primary transition-colors" href="#">Termos de Uso</a>
@@ -238,7 +238,7 @@
         </footer>
     </main>
     <!-- Floating Action Button -->
-    <a class="fixed bottom-24 right-6 w-14 h-14 text-on-secondary rounded-full flex items-center justify-center fab-shadow z-40 transition-transform active:scale-90"
+    <a class="fixed bottom-6 right-6 w-14 h-14 text-on-secondary rounded-full flex items-center justify-center fab-shadow z-40 transition-transform active:scale-90"
         id="whatsapp-fab" href="#" style="background-color: rgb(37, 211, 102); border-radius: 50%;">
         <svg fill="currentColor" height="28" viewBox="0 0 24 24" width="28" xmlns="http://www.w3.org/2000/svg">
             <path
@@ -318,12 +318,12 @@
                     </div>
                     ${dotsHtml}
                     <div class="space-y-1">
-                        <h4 class="font-headline-sm text-headline-sm font-normal !tracking-normal">${artwork.title}</h4>
-                        <p class="font-body-md text-body-md text-on-surface-variant">${artwork.technique}, ${artwork.year}</p>
+                        <h4 class="font-body-lg text-body-lg font-normal !tracking-normal">${artwork.title}</h4>
+                        <p class="font-detail-sm text-detail-sm text-on-surface-variant">${artwork.technique}, ${artwork.year}</p>
                         <p class="font-detail-sm text-detail-sm text-text-muted">${artwork.dimensions}</p>
                         <p class="font-detail-sm text-detail-sm text-text-muted">${artwork.price_info}</p>
                         ${artwork.description ? `
-                        <div class="mt-2">
+                        <div class="!mt-[14px]">
                             <p class="font-body-md text-body-md text-on-surface-variant text-justify line-clamp-3 transition-all duration-500 whitespace-pre-wrap" id="desc-text-${artwork.id}">${artwork.description}</p>
                             <button class="font-section-label text-section-label text-primary border-b border-primary pt-1 tracking-wider hover:opacity-70 transition-opacity hidden mt-1" id="desc-btn-${artwork.id}" onclick="toggleArtworkDescription('${artwork.id}')">ver mais</button>
                         </div>
